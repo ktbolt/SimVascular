@@ -335,12 +335,25 @@ sv4guiSegmentationUtils::CreatePlaneGeometry(sv4guiPathElement::sv4guiPathPoint 
 // CreateSlicedGeometry
 //----------------------
 //
-mitk::SlicedGeometry3D::Pointer sv4guiSegmentationUtils::CreateSlicedGeometry(std::vector<sv4guiPathElement::sv4guiPathPoint> pathPoints, mitk::BaseData* baseData, double size, bool useOnlyMinimumSpacing)
+// [davep] modify to return a ProportionalTimeGeometry object. 
+//
+mitk::ProportionalTimeGeometry::Pointer
+//mitk::TimeGeometry::Pointer 
+//mitk::SlicedGeometry3D::Pointer 
+sv4guiSegmentationUtils::CreateSlicedGeometry(std::vector<sv4guiPathElement::sv4guiPathPoint> pathPoints, 
+    mitk::BaseData* baseData, double size, bool useOnlyMinimumSpacing)
 {
-    mitk::SlicedGeometry3D::Pointer slicedGeo3D=mitk::SlicedGeometry3D::New();
+
+    std::string msg = "[CreateSlicedGeometry] ";
+    std::cout << msg << "========== CreateSlicedGeometry ========== " << std::endl;
+
+    // Create a ProportionalTimeGeometry object to store a slicedGeo3D object. 
+    auto prop_time_geom = mitk::ProportionalTimeGeometry::New();
+
+    mitk::SlicedGeometry3D::Pointer slicedGeo3D = mitk::SlicedGeometry3D::New();
     slicedGeo3D->SetEvenlySpaced(false);
     slicedGeo3D->InitializeSlicedGeometry(pathPoints.size());
-    mitk::Image* image=dynamic_cast<mitk::Image*>(baseData);
+    mitk::Image* image = dynamic_cast<mitk::Image*>(baseData);
 
     for (int i = 0; i < pathPoints.size(); i++) {
         mitk::PlaneGeometry::Pointer planegeometry = CreatePlaneGeometry(pathPoints[i], baseData,
@@ -360,7 +373,20 @@ mitk::SlicedGeometry3D::Pointer sv4guiSegmentationUtils::CreateSlicedGeometry(st
         slicedGeo3D->SetOrigin(geometry->GetOrigin());
         slicedGeo3D->SetIndexToWorldTransform(geometry->GetIndexToWorldTransform());
     }
-    return slicedGeo3D;
+
+    prop_time_geom->Initialize(slicedGeo3D, 1);
+
+    // This causes a segfault using the new extrnals.
+    std::cout << msg << "########### clone ... " << std::endl;
+    auto cgeom = slicedGeo3D->Clone();
+    //mitk::BaseGeometry::Pointer cgeom = slicedGeo3D->Clone();
+
+
+
+
+
+    return prop_time_geom;
+    //return slicedGeo3D;
 }
 
 //---------------

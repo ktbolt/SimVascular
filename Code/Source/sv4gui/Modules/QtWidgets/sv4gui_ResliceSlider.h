@@ -132,7 +132,8 @@ protected:
 
     QmitkStdMultiWidget* displayWidget=NULL;
 
-    mitk::SlicedGeometry3D::Pointer currentSlicedGeometry;
+    mitk::ProportionalTimeGeometry::Pointer currentSlicedGeometry;
+    //mitk::SlicedGeometry3D::Pointer currentSlicedGeometry;
 
     QCheckBox* resliceCheckBox;
     QmitkRenderWindow* intensityWindow;

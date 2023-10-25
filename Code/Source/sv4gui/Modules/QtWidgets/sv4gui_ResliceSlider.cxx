@@ -163,8 +163,13 @@ double sv4guiResliceSlider::getResliceSize()
     return resliceSize;
 }
 
+// modify to use a ProportionalTimeGeometry object. 
+//
 void sv4guiResliceSlider::updateReslice()
 {
+    std::string msg = "[sv4guiResliceSlider::updateReslice] ";
+    std::cout << msg << "========== updateReslice ========== " << std::endl;
+
     if(!isResliceOn()) return;
 
     if(m_PathPoints.size()==0) return;
@@ -185,18 +190,22 @@ void sv4guiResliceSlider::updateReslice()
     //        currentSlicedGeometry=NULL;
     //    }
 
-    currentSlicedGeometry=sv4guiSegmentationUtils::CreateSlicedGeometry(m_PathPoints, baseData, resliceSize);
+    currentSlicedGeometry = sv4guiSegmentationUtils::CreateSlicedGeometry(m_PathPoints, baseData, resliceSize);
     displayWidget->changeLayoutTo2x2Dand3DWidget();
 
     mitk::SliceNavigationController::Pointer intensityController=intensityWindow->GetSliceNavigationController();
-    intensityController->SetInputWorldGeometry3D(currentSlicedGeometry);
+    intensityController->SetInputWorldTimeGeometry(currentSlicedGeometry);
+    //intensityController->SetInputWorldGeometry3D(currentSlicedGeometry);
     intensityController->SetViewDirection(mitk::SliceNavigationController::Original);
     intensityController->Update();
 
+/*
     mitk::SliceNavigationController::Pointer potentialController=potentialWindow->GetSliceNavigationController();
-    potentialController->SetInputWorldGeometry3D(currentSlicedGeometry);
+    potentialController->SetInputWorldGeometry(currentSlicedGeometry);
+    //potentialController->SetInputWorldGeometry3D(currentSlicedGeometry);
     potentialController->SetViewDirection(mitk::SliceNavigationController::Original);
     potentialController->Update();
+*/
     if(image)
     {
         mitk::LookupTable::Pointer mitkLut = mitk::LookupTable::New();
@@ -395,7 +404,8 @@ int sv4guiResliceSlider::GetSliceNumber()
     if(currentSlicedGeometry.IsNull())
         return 0;
     else
-        return currentSlicedGeometry->GetSlices();
+        return currentSlicedGeometry->CountTimeSteps();
+        //return currentSlicedGeometry->GetSlices();
 }
 
 void sv4guiResliceSlider::moveToPathPosPoint(mitk::Point3D posPoint){
