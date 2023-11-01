@@ -367,7 +367,7 @@ sv4guiSegmentationUtils::CreateSlicedGeometry(std::vector<sv4guiPathElement::sv4
     }
 
     if (baseData) {
-        auto geometry = baseData->GetTimeGeometry()->GetGeometryForTimeStep(0);
+        mitk::BaseGeometry::Pointer geometry = baseData->GetTimeGeometry()->GetGeometryForTimeStep(0);
         slicedGeo3D->SetReferenceGeometry(geometry);
         slicedGeo3D->SetBounds(geometry->GetBounds());
         slicedGeo3D->SetOrigin(geometry->GetOrigin());
@@ -380,9 +380,6 @@ sv4guiSegmentationUtils::CreateSlicedGeometry(std::vector<sv4guiPathElement::sv4
     std::cout << msg << "########### clone ... " << std::endl;
     auto cgeom = slicedGeo3D->Clone();
     //mitk::BaseGeometry::Pointer cgeom = slicedGeo3D->Clone();
-
-
-
 
 
     return prop_time_geom;
