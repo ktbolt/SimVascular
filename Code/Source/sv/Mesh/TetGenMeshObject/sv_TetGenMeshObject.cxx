@@ -1112,11 +1112,12 @@ int cvTetGenMeshObject::SetWalls(int numWalls, int *walls)
   if (meshoptions_.usemmg == 0)
   {
 #endif
+
     auto thresholder = vtkSmartPointer<vtkThreshold>::New();
     thresholder->SetInputData(polydatasolid_);
-     //Set Input Array to 0 port,0 connection,1 for Cell Data, and WallID is the type name
-    thresholder->SetInputArrayToProcess(0,0,0,1,"WallID");
-    //dp thresholder->ThresholdBetween(1,1);
+    thresholder->SetInputArrayToProcess(0,0,0,1,"WallID"); 
+    thresholder->SetLowerThreshold(1.0);
+    thresholder->SetUpperThreshold(1.0);
     thresholder->Update();
 
     auto surfacer = vtkSmartPointer<vtkDataSetSurfaceFilter>::New();

@@ -190,39 +190,12 @@ bool sv4guiMeshLegacyIO::WriteFiles(mitk::DataNode::Pointer meshNode, sv4guiMode
       if (threshold_surface->GetNumberOfCells() == 0) { 
         continue;
       }
-      /* dp
-      auto surfThresholder = vtkSmartPointer<vtkThreshold>::New();
-      surfThresholder->SetInputData(surfaceMesh);
-      surfThresholder->SetInputArrayToProcess(0,0,0,1,"ModelRegionID");
-      surfThresholder->ThresholdBetween(i,i);
-      surfThresholder->Update();
-      if (surfThresholder->GetOutput()->GetNumberOfCells() == 0) {
-        continue;
-      }
-
-      auto surfacer = vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
-      surfacer->SetInputData(surfThresholder->GetOutput());
-      surfacer->Update();
-      if (surfacer->GetOutput()->GetNumberOfCells() == 0) {
-        continue;
-      }
-      */
 
       // Extract volume mesh.
       auto threshold_volume = VtkUtils_ThresholdUgrid(i, i, "ModelRegionID", volumeMesh);
       if (threshold_volume->GetNumberOfCells() == 0) {
         continue;
       }
-      /* dp
-      auto volumeThresholder = vtkSmartPointer<vtkThreshold>::New();
-      volumeThresholder->SetInputData(volumeMesh);
-      volumeThresholder->SetInputArrayToProcess(0,0,0,1,"ModelRegionID");
-      volumeThresholder->ThresholdBetween(i,i);
-      volumeThresholder->Update();
-      if (volumeThresholder->GetOutput()->GetNumberOfCells() == 0) {
-        continue;
-      }
-      */
 
       // Write meshes.
       //
@@ -338,20 +311,6 @@ bool sv4guiMeshLegacyIO::WriteFiles(vtkSmartPointer<vtkPolyData> surfaceMesh, vt
           auto region_surface = VtkUtils_ThresholdSurface(j, j, "RegionId", connectFilter->GetOutput());
           region_surface->GetCellData()->RemoveArray("RegionId");
           region_surface->GetPointData()->RemoveArray("RegionId");
-          /* dp
-          auto thresholder = vtkSmartPointer<vtkThreshold>::New();
-          thresholder->SetInputData(connectFilter->GetOutput());
-          thresholder->SetInputArrayToProcess(0,0,0,1,"RegionId");
-          thresholder->ThresholdBetween(j, j);
-          thresholder->Update();
-
-          auto surfacer = vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
-          surfacer->SetInputData(thresholder->GetOutput());
-          surfacer->Update();
-          surfacer->GetOutput()->GetCellData()->RemoveArray("RegionId");
-          surfacer->GetOutput()->GetPointData()->RemoveArray("RegionId");
-          auto region_surface = surfacer->GetOutput(); 
-          */
 
           vtpFilePath = meshDir + "/walls_combined_connected_region_" + QString::number(j) + ".vtp";
           vtpFilePath = QDir::toNativeSeparators(vtpFilePath);

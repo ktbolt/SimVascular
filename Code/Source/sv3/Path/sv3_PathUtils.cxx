@@ -74,39 +74,12 @@ PathUtils::ExtractCenterlinesSections(vtkSmartPointer<vtkPolyData>& centerlines)
   //
   for (int cid = minId; cid <= maxId; cid++) {
       auto centerlinesCidThreshold = VtkUtils_ThresholdSurface(cid, cid, CenterlineIdsArrayName, centerlines);
-      /*dp
-      auto threshold = vtkSmartPointer<vtkThreshold>::New();
-      threshold->SetInputData(centerlines);
-      threshold->SetInputArrayToProcess(0, 0, 0, "vtkDataObject::FIELD_ASSOCIATION_CELLS", CenterlineIdsArrayName.c_str());
-      threshold->ThresholdBetween(cid, cid);
-      threshold->Update();
-      auto threshold_mesh = VtkUtils_ThresholdPolyData(CenterlineIdsArrayName, centerlines); 
-      auto surfacer = vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
-      surfacer->SetInputData(threshold_mesh);
-      surfacer->Update();
-      auto centerlinesCidThreshold = surfacer->GetOutput();
-      */
-
       auto groupData = centerlinesCidThreshold->GetCellData()->GetArray(GroupIdsArrayName.c_str());
       double lowerValue = groupData->GetRange()[0];
       double upperValue = groupData->GetRange()[1];
-
       auto group_threshold = VtkUtils_ThresholdSurface(lowerValue, upperValue, GroupIdsArrayName, centerlinesCidThreshold);
-      /* dp
-      auto groupThreshold = vtkSmartPointer<vtkThreshold>::New();
-      groupThreshold->SetInputData(centerlinesCidThreshold);
-      groupThreshold->SetInputArrayToProcess(0, 0, 0, "vtkDataObject::FIELD_ASSOCIATION_CELLS", GroupIdsArrayName.c_str());
-      groupThreshold->ThresholdBetween(lowerValue, upperValue);
-      groupThreshold->Update();
-
-      auto groupSurfacer = vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
-      groupSurfacer->SetInputData(groupThreshold->GetOutput());
-      groupSurfacer->Update();
-      */
-
       auto groupCenterlines = vtkSmartPointer<vtkPolyData>::New();
       groupCenterlines->DeepCopy(group_threshold);
-      //dp groupCenterlines->DeepCopy(groupSurfacer->GetOutput());
       pathsGeometry.push_back(groupCenterlines);
   }
 
