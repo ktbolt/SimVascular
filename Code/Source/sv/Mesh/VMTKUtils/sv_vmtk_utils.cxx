@@ -1605,9 +1605,6 @@ int VMTKUtils_CreateBoundaryLayerSurfaceAndCaps(vtkUnstructuredGrid* boundaryMes
   auto threshold_caps = VtkUtils_ThresholdSurface(0.0, 0.0, "WallID", surfaceWithSize);
   surfaceMeshCaps->DeepCopy(threshold_caps);
 
-  VtkUtils_write_vtu(surfaceWithSize, "VMTKUtils_CreateBoundaryLayerSurfaceAndCaps_surfaceWithSize.vtu");
-  VtkUtils_write_vtp(surfaceMeshCaps, "VMTKUtils_CreateBoundaryLayerSurfaceAndCaps_surfaceMeshCaps.vtp");
-
   // Set the values of the 'ModelFaceID' array for the caps to 9999(?). 
   //
   auto cellEntityIds = boundaryMeshSurface->GetCellData()->GetArray("CellEntityIds");
