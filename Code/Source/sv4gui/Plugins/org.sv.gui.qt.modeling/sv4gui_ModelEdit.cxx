@@ -1680,6 +1680,8 @@ void sv4guiModelEdit::ShowCapSelectionWidget()
 //
 // Return a list of segmentations that overlap.
 //
+// [TODO] This does not work correctly so the call to it has been commented out.
+//
 std::vector<std::pair<std::string,std::string>>
 sv4guiModelEdit::CheckForNestedVessels(std::vector<std::string>& segNames, std::vector<mitk::DataNode::Pointer>& segNodes)
 {
@@ -1836,6 +1838,8 @@ void sv4guiModelEdit::CreateModel()
 
     // Check for nested segmentations if found the display a warning message. 
     //
+    // [TODO] This is not working correctly so comment out for now.
+    /*
     auto nested_segments = CheckForNestedVessels(validSegNames, segNodes);
 
     if (nested_segments.size() != 0) {
@@ -1858,6 +1862,7 @@ void sv4guiModelEdit::CreateModel()
         mb.exec();
         return;
     }
+    */
 
     // Sanity check
     int numSeg2D = 0;
